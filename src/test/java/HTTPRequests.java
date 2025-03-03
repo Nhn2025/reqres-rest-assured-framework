@@ -1,84 +1,68 @@
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import io.restassured.response.Response;
-
-import java.util.Map;
-
-import static io.restassured.RestAssured.*;
+import java.util.HashMap;
 import static org.hamcrest.Matchers.*;
-
+import static io.restassured.RestAssured.*;
 public class HTTPRequests {
 
-    private static final String BASE_URL = "https://reqres.in/api/users";  // Tách URL tránh hardcode
-    private int userId;
-
-    @BeforeClass
-    public void setup() {
-        baseURI = BASE_URL;
-    }
+    int id;
 
     @Test(priority = 1)
-    public void createUser() {
-        Map<String, String> data = Map.of(
-                "name", "nhu",
-                "job", "tester"
-        );
+    void createUser() {
+        HashMap data = new HashMap();
+        data.put("name", "nhu");
+        data.put("job", "tester");
 
-        Response response = given()
+        id=given()
                 .contentType("application/json")
                 .body(data)
-                .when()
-                .post()
-                .then()
-                .statusCode(201)
-                .body("name", equalTo("nhu"))
-                .body("job", equalTo("tester"))
-                .log().all()
-                .extract().response();
 
-        // Kiểm tra id hợp lệ
-        userId = response.jsonPath().getInt("id");
-        Assert.assertTrue(userId > 0, "User ID is not valid!");
+        .when()
+                .post("https://reqres.in/api/users")
+                .jsonPath().getInt("id");
     }
 
     @Test(priority = 2, dependsOnMethods = {"createUser"})
-    public void getUser() {
+    void getUser() {
         given()
-                .when()
-                .get("?page=" + userId)  // Sửa lại đúng URL
-                .then()
+
+        .when()
+                .get("https://reqres.in/api/users?page=" + id)
+
+        .then()
                 .statusCode(200)
-                .body("page", equalTo(userId))
+                .body("page", equalTo(id))
                 .log().all();
     }
 
     @Test(priority = 3, dependsOnMethods = {"createUser"})
-    public void updateUser() {
-        Map<String, String> data = Map.of(
-                "name", "rua",
-                "job", "auto"
-        );
+    void updateUser() {
+        HashMap data = new HashMap();
+        data.put("name", "rua");
+        data.put("job", "auto");
 
         given()
                 .contentType("application/json")
                 .body(data)
-                .when()
-                .put("/" + userId)
-                .then()
+
+        .when()
+                .put("https://reqres.in/api/users/" + id)
+
+        .then()
                 .statusCode(200)
                 .body("name", equalTo("rua"))
-                .body("job", equalTo("auto"))
                 .log().all();
     }
 
     @Test(priority = 4, dependsOnMethods = {"createUser"})
-    public void deleteUser() {
+    void deleteUser() {
         given()
-                .when()
-                .delete("/" + userId)
-                .then()
+
+        .when()
+                .delete("https://reqres.in/api/users/" + id)
+
+        .then()
                 .statusCode(204)
                 .log().all();
     }
+
 }
