@@ -11,6 +11,7 @@ It includes test cases for **CRUD operations (GET, POST, PUT, DELETE)** and supp
 - **TestNG Framework** for structured test execution.
 - **Data-Driven Testing** using JSON.
 - **Allure Reports** for visual test execution reports.
+- **CI/CD Integration** using GitHub Actions to automate testing with each code push.
 
 ---
 
@@ -22,6 +23,7 @@ It includes test cases for **CRUD operations (GET, POST, PUT, DELETE)** and supp
 | **TestNG**     | Test execution & reporting |
 | **Maven**      | Dependency management |
 | **Allure Reports** | Test reporting |
+|**GitHub Actions**|CI/CD Integration|
 
 ---
 
@@ -35,10 +37,11 @@ reqres-api-testing
 |   |   |   |— JsonUtil.java  # JSON response handling  
 |   |— test  
 |   |   |— apiTests  
-|   |   |   |— GetUsersTest.java  # Test API GET  
-|   |   |   |— CreateUserTest.java  # Test API POST  
-|   |   |   |— UpdateUserTest.java  # Test API PUT  
-|   |   |   |— DeleteUserTest.java  # Test API DELETE  
+|   |   |   |— GetUsersTest.java  
+|   |   |   |— CreateUserTest.java 
+|   |   |   |— RegisterUserTest.java 
+|   |   |   |— UpdateUserTest.java 
+|   |   |   |— DeleteUserTest.java  
 |   |— resources  
 |   |   |— testData.json  # Data for API testing  
 |   |— reports  
@@ -83,16 +86,6 @@ mvn test -Dtest=GetUsersTest
 ```sh  
 allure serve target/allure-results  
 ```
-
----
-
-## 📌 Test Cases 📉
-| **Test Case** | **API Endpoint** | **Method** | **Description** |  
-|--------------|----------------|------------|----------------|  
-| `TC_001` | `/api/users?page=2` | `GET` | Get list of users |  
-| `TC_002` | `/api/users` | `POST` | Create a new user |  
-| `TC_003` | `/api/users/2` | `PUT` | Update user details |  
-| `TC_004` | `/api/users/2` | `DELETE` | Delete a user |  
 
 ---
 
