@@ -38,7 +38,7 @@ public class UpdateUserTest {
                 .put("https://reqres.in/api/users/" + id)
 
         .then()
-                .statusCode(200)
+                .statusCode(400)
                 .body("name", equalTo("rua"))
                 .log().all();
     }
