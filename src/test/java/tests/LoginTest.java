@@ -12,7 +12,7 @@ public class LoginTest {
     String email, password;
 
     @Test(priority = 1)
-    void createUser() {
+    void registerUser() {
         JSONObject data = new JSONObject();
         data.put("email", "eve.holt@reqres.in");
         data.put("password", "pistol");
@@ -30,7 +30,7 @@ public class LoginTest {
         password = data.getString("password");
     }
 
-    @Test(priority = 2, dependsOnMethods = {"createUser"})
+    @Test(priority = 2, dependsOnMethods = {"registerUser"})
     void loginUser() {
         JSONObject data = new JSONObject();
         data.put("email", email);
