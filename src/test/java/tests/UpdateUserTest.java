@@ -1,8 +1,11 @@
+package tests;
+
 import org.testng.annotations.Test;
 import java.util.HashMap;
-import static org.hamcrest.Matchers.*;
-import static io.restassured.RestAssured.*;
-public class HTTPRequests {
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
+public class UpdateUserTest {
 
     int id;
 
@@ -12,7 +15,7 @@ public class HTTPRequests {
         data.put("name", "nhu");
         data.put("job", "tester");
 
-        id=given()
+        id = given()
                 .contentType("application/json")
                 .body(data)
 
@@ -22,19 +25,6 @@ public class HTTPRequests {
     }
 
     @Test(priority = 2, dependsOnMethods = {"createUser"})
-    void getUser() {
-        given()
-
-        .when()
-                .get("https://reqres.in/api/users?page=" + id)
-
-        .then()
-                .statusCode(200)
-                .body("page", equalTo(id))
-                .log().all();
-    }
-
-    @Test(priority = 3, dependsOnMethods = {"createUser"})
     void updateUser() {
         HashMap data = new HashMap();
         data.put("name", "rua");
@@ -50,18 +40,6 @@ public class HTTPRequests {
         .then()
                 .statusCode(200)
                 .body("name", equalTo("rua"))
-                .log().all();
-    }
-
-    @Test(priority = 4, dependsOnMethods = {"createUser"})
-    void deleteUser() {
-        given()
-
-        .when()
-                .delete("https://reqres.in/api/users/" + id)
-
-        .then()
-                .statusCode(204)
                 .log().all();
     }
 
