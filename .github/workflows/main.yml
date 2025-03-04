@@ -35,13 +35,13 @@ jobs:
       - name: Run API Tests with Maven
         run: mvn clean test
 
-      # Thêm bước tạo Allure Report
+      # Generate Allure Report
       - name: Generate Allure Report
         run: mvn allure:serve
 
-      # Tải báo cáo Allure lên GitHub
+      # Upload Allure Report using latest version of actions/upload-artifact
       - name: Upload Allure report as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2  # Cập nhật lên v2 hoặc v3 mới nhất
         with:
           name: allure-report
           path: target/allure-results
