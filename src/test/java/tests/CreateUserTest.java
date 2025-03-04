@@ -3,10 +3,9 @@ package tests;
 import org.testng.annotations.Test;
 import java.util.HashMap;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class CreateUserTest {
-
-    int id;
 
     @Test(priority = 1)
     void createUser() {
@@ -14,13 +13,17 @@ public class CreateUserTest {
         data.put("name", "nhu");
         data.put("job", "tester");
 
-        id = given()
+        given()
                 .contentType("application/json")
         .body(data)
 
         .when()
                 .post("https://reqres.in/api/users")
-                .jsonPath().getInt("id");
+
+        .then()
+                .statusCode(201)
+                .body("name", equalTo("nhu"))
+                .body("job", equalTo("tester"));
     }
 
 }
