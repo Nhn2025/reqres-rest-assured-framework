@@ -50,9 +50,9 @@ public class LoginTest {
     }
 
     @Test(priority = 3, dependsOnMethods = {"registerUser"})
-    void loginWithInvalidPassword() {
+    void loginWithInvalidEmail() {
         JSONObject data = new JSONObject();
-        data.put("email", "eve.holt@reqres.in");
+        data.put("email", "evt@reqres.in");
         data.put("password", "1234^");
 
         given()
@@ -63,7 +63,8 @@ public class LoginTest {
                 .post("https://reqres.in/api/login")
 
         .then()
-                .statusCode(200);
+                .statusCode(400)
+                .body("error", equalTo("user not found"));
     }
 
 }
