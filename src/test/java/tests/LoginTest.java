@@ -6,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class LoginTest {
 
@@ -46,6 +47,23 @@ public class LoginTest {
         Assert.assertEquals(response.getStatusCode(), 200);
 
         Assert.assertNotNull(response.jsonPath().getString("token"));
+    }
+
+    @Test(priority = 3, dependsOnMethods = {"registerUser"})
+    void loginWithInvalidPassword() {
+        JSONObject data = new JSONObject();
+        data.put("email", "eve.holt@reqres.in");
+        data.put("password", "1234^");
+
+        given()
+                .contentType("application/json")
+                .body(data.toString())
+
+        .when()
+                .post("https://reqres.in/api/login")
+
+        .then()
+                .statusCode(200);
     }
 
 }
