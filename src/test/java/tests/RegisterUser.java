@@ -6,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class RegisterUser {
 
@@ -23,6 +24,24 @@ public class RegisterUser {
                 .post("https://reqres.in/api/register");
 
         Assert.assertEquals(response.statusCode(), 200);
+    }
+
+    @Test(priority = 2)
+    void registerUserWithEmptyEmail() {
+        JSONObject data = new JSONObject();
+        data.put("email", "");
+        data.put("password", "123456%43");
+
+        given()
+                .contentType("application/json")
+                .body(data.toString())
+
+        .when()
+                .post("https://reqres.in/api/register")
+
+        .then()
+                .statusCode(400)
+                .body("error", equalTo("Missing email or username"));
     }
 
 }
