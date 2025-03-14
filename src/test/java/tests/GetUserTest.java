@@ -1,5 +1,8 @@
 package tests;
 
+import io.restassured.response.Response;
+import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.HashMap;
 import static io.restassured.RestAssured.given;
@@ -7,7 +10,8 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class GetUserTest {
 
-    int id;
+    int idCreate;
+    int idRegister;
 
     @Test(priority = 1)
     void createUser() {
@@ -15,7 +19,7 @@ public class GetUserTest {
         data.put("name", "nhu");
         data.put("job", "tester");
 
-        id = given()
+        idCreate = given()
                 .contentType("application/json")
                 .body(data)
 
@@ -25,16 +29,45 @@ public class GetUserTest {
     }
 
     @Test(priority = 2, dependsOnMethods = {"createUser"})
-    void getUser() {
+    void getListUsers() {
         given()
 
         .when()
-                .get("https://reqres.in/api/users?page=" + id)
+                .get("https://reqres.in/api/users?page=" + idCreate)
 
         .then()
                 .statusCode(200)
-                .body("page", equalTo(id))
+                .body("page", equalTo(idCreate))
                 .log().all();
+    }
+
+    @Test(priority = 3)
+    void registerUser() {
+        JSONObject data = new JSONObject();
+        data.put("email", "eve.holt@reqres.in");
+        data.put("password", "pistol");
+
+        Response response = given()
+                .contentType("application/json")
+                .body(data.toString())
+
+                .when()
+                .post("https://reqres.in/api/register");
+
+        Assert.assertEquals(response.statusCode(), 200);
+        idRegister = response.jsonPath().getInt("id");
+    }
+
+    @Test(priority = 4, dependsOnMethods = {"registerUser"})
+    void getSingleUser() {
+        given()
+
+        .when()
+                .get("https://reqres.in/api/users/" + idRegister)
+
+        .then()
+                .statusCode(200)
+                .body("data.id", equalTo(idRegister));
     }
 
 }
