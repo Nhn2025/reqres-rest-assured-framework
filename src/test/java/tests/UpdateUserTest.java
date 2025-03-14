@@ -1,5 +1,7 @@
 package tests;
 
+import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.HashMap;
 import static io.restassured.RestAssured.given;
@@ -25,7 +27,7 @@ public class UpdateUserTest {
     }
 
     @Test(priority = 2, dependsOnMethods = {"createUser"})
-    void updateUser() {
+    void updateUserUsingPut() {
         HashMap data = new HashMap();
         data.put("name", "rua");
         data.put("job", "auto");
@@ -41,6 +43,23 @@ public class UpdateUserTest {
                 .statusCode(200)
                 .body("name", equalTo("rua"))
                 .log().all();
+    }
+
+    @Test(priority = 3, dependsOnMethods = {"createUser"})
+    void updateUserUsingPatch() {
+        HashMap dataUser = new HashMap();
+        dataUser.put("name", "hoax");
+        dataUser.put("job", "auto/manual");
+
+        Response response = given()
+                                .contentType("application/json")
+                                .body(dataUser)
+                            .when()
+                                .patch("https://reqres.in/api/users/" + id);
+
+        Assert.assertEquals(response.statusCode(), 200);
+        Assert.assertEquals(response.jsonPath().getString("name"), "hoax");
+        Assert.assertEquals(response.jsonPath().getString("job"), "auto/manual");
     }
 
 }
