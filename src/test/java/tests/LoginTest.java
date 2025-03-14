@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.in;
 
 public class LoginTest {
 
@@ -65,6 +66,23 @@ public class LoginTest {
         .then()
                 .statusCode(400)
                 .body("error", equalTo("user not found"));
+    }
+
+    @Test(priority = 4)
+    void loginWithMissPassword() {
+        JSONObject infoLogin = new JSONObject();
+        infoLogin.put("email", "phan@gmail.com");
+
+        given()
+                .contentType("application/json")
+                .body(infoLogin.toString())
+
+        .when()
+                .post("https://reqres.in/api/login")
+
+        .then()
+                .statusCode(400)
+                .body("error", equalTo("Missing password"));
     }
 
 }
