@@ -1,10 +1,13 @@
 package tests;
 
 import io.restassured.response.Response;
+import org.codehaus.groovy.tools.StringHelper;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.HashMap;
+import java.util.Random;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -68,6 +71,22 @@ public class GetUserTest {
         .then()
                 .statusCode(200)
                 .body("data.id", equalTo(idRegister));
+    }
+
+    @Test(priority = 5)
+    void getSingleUserNotFound() {
+        given()
+
+        .when()
+                .get("https://reqres.in/api/users/" + generateRandomNumber(4, 100000))
+
+        .then()
+                .statusCode(404);
+    }
+
+    public int generateRandomNumber(int min, int max) {
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
     }
 
 }
