@@ -44,4 +44,22 @@ public class RegisterUser {
                 .body("error", equalTo("Missing email or username"));
     }
 
+    @Test(priority = 3)
+    void registerUserWithEmptyPassword() {
+        JSONObject data = new JSONObject();
+        data.put("email", "abd@gmail.com");
+        data.put("password", "");
+
+        given()
+                .contentType("application/json")
+                .body(data.toString())
+
+        .when()
+                .post("https://reqres.in/api/register")
+
+        .then()
+                .statusCode(400)
+                .body("error", equalTo("Missing password"));
+    }
+
 }
